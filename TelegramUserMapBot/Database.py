@@ -20,7 +20,7 @@ class UserDatabase:
         self.db.init(dbfile)
         database_proxy.initialize(self.db)
         self.db.connect()
-        self.db.create_tables([Database.SFUser], safe=True)
+        self.db.create_tables([UserDatabase.SFUser], safe=True)
         self.db.commit()
 
     def __del__(self):
@@ -29,12 +29,12 @@ class UserDatabase:
     def set_location(self, user_id, location, lat, lng):
         with self.db.atomic() as txn:
             try:
-                user = Database.SFUser.get(id=user_id)
+                user = UserDatabase.SFUser.get(id=user_id)
                 user.location = location
                 user.lat = lat
                 user.lng = lng
                 user.lastupdated = datetime.datetime.now()
-            except Database.SFUser.DoesNotExist:
+            except UserDatabase.SFUser.DoesNotExist:
                 user = SFUser.create(
                     id = user_id,
                     location = location,
@@ -46,32 +46,32 @@ class UserDatabase:
 
     def get_user(self, user_id):
         try:
-            user = Database.SFUser.get(id=user_id)
+            user = UserDatabase.SFUser.get(id=user_id)
             return user
-        except Database.SFUser.DoesNotExist:
+        except UserDatabase.SFUser.DoesNotExist:
             return None
 
     def get_location(self, user_id):
         try:
-            user = Database.SFUser.get(id=user_id)
+            user = UserDatabase.SFUser.get(id=user_id)
             return user.location
-        except Database.SFUser.DoesNotExist:
+        except UserDatabase.SFUser.DoesNotExist:
             return None
 
     def get_geo(self, user_id):
         try:
-            user = Database.SFUser.get(id=user_id)
+            user = UserDatabase.SFUser.get(id=user_id)
             return user.lat, user.lng
         except SFUser.DoesNotExist:
             return None
 
     def delete_user(self, user_id):
         with self.db.atomic() as txn:
-            Database.SFUser.delete().where(Database.SFUser.id == user_id).execute()
+            UserDatabase.SFUser.delete().where(UserDatabase.SFUser.id == user_id).execute()
 
     def get_all(self):
         """Returns a list of all stored geo coordinates."""
-        return [(user.lat, user.lng, user.location, user.id) for user in Database.SFUser.select()]
+        return [(user.lat, user.lng, user.location, user.id) for user in UserDatabase.SFUser.select()]
 
     def export_csv(self, fname='locations.csv'):
         with open(fname, 'w') as fd:
