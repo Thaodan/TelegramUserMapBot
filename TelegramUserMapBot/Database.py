@@ -35,7 +35,7 @@ class UserDatabase:
                 user.lng = lng
                 user.lastupdated = datetime.datetime.now()
             except UserDatabase.SFUser.DoesNotExist:
-                user = SFUser.create(
+                user = UserDatabase.SFUser.create(
                     id = user_id,
                     location = location,
                     lat = lat,
