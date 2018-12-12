@@ -240,6 +240,8 @@ def main():
 
     def botstop(__signo, __stackframe):
         bot.stop()
+        sys.exit(__signo)
+
 
     signal.signal(signal.SIGTERM, botstop)
     signal.signal(signal.SIGINT, botstop)
