@@ -11,7 +11,7 @@ from telegram import ParseMode, error
 from types import SimpleNamespace
 from pkg_resources import resource_filename
 
-import TelegramUserMapBot.database as db
+import TelegramUserMapBot.Database as db
 
 
 class UserMapBot:
@@ -32,8 +32,7 @@ class UserMapBot:
             self.l10n = json.load(fd)
 
         # local database
-        db.initialize(self.config.database_file)
-
+        self.db = db.UserDatabase(self.config.database_file)
         # authorizing with Telegram Bot API
         self.updater = Updater(token=self.config.BOT_TOKEN)
         self.dispatcher = self.updater.dispatcher
@@ -81,7 +80,6 @@ class UserMapBot:
 
     def __del__(self):
         self.stop()
-        db.close()
         logging.shutdown()
 
     ### utililty functions
